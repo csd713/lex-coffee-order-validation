@@ -10,7 +10,7 @@ module.exports.delegate = function(sessionAttributes, slots) {
   };
 }
 
-module.exports.elicitSlot = function(sessionAttributes, intentName, slots, slotToElicit, message) {
+module.exports.elicitSlot = function(sessionAttributes, intentName, slots, slotToElicit, messageContent) {
   return {
     sessionAttributes,
     dialogAction: {
@@ -18,6 +18,20 @@ module.exports.elicitSlot = function(sessionAttributes, intentName, slots, slotT
       intentName,
       slots,
       slotToElicit,
+      message: {
+        "contentType": "PlainText",
+        "content": messageContent
+      }
+    },
+  };
+}
+
+module.exports.close = function(sessionAttributes, fulfillmentState, message) {
+  return {
+    sessionAttributes,
+    dialogAction: {
+      type: 'Close',
+      fulfillmentState,
       message,
     },
   };
