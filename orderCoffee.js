@@ -2,8 +2,9 @@
 
 const lexResponses = require('./lexResponses');
 const databaseManager = require('./databaseManager');
+const sendOrderSMS = require('./sendOrderSMS');
 
-const types = ['latte', 'mocha', 'americano', 'cappuccino', 'espresso'];
+const types = ['latte', 'americano', 'cappuccino', 'espresso'];
 const sizes = ['double', 'normal', 'large'];
 
 function buildValidationResult(isValid_m, violatedSlot_m, messageContent) {
@@ -67,7 +68,10 @@ function fulfillOrder(coffeeType, coffeeSize) {
 
   return databaseManager.saveOrderToDatabase(coffeeType, coffeeSize).then((item) => {
     console.log('orderCoffee: printing order id: ' + item.orderId);
-    return buildFulfillmentResult('Fulfilled', 'Thank you :), your order with id: ' + item.orderId + ' has been placed and will be ready soon!!');
+    //send SMS using Twilio
+    sendOrderSMS.sendSMS(item.orderId, item.drink);
+
+    return buildFulfillmentResult('Fulfilled', 'Thank you :), your order with id: ' + item.orderId + ' has been placed and will be ready soon!!\n Sent a confirmation SMS to your mobile!');
   });
 }
 
